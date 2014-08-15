@@ -50,9 +50,44 @@ install_github<span class="p">(</span><span class="s">"CosmoR"</span><span class
 
 <p>This is an R Markdown document to explain in simple terms the use of Generalized Linear Models into Astronomy reproducing the main results from Rafael S. de Souza et al (2014).</p>
 
-<div class="highlight highlight-r"><pre>x<span class="o">&lt;-</span><span class="m">2</span>
-<span class="kp">print</span><span class="p">(</span>x<span class="o">^</span><span class="m">2</span><span class="p">)</span>
+<p>Reading the data </p>
+
+<p>Set working directory to the data folder (replace by your own directory)</p>
+
+<div class="highlight highlight-r"><pre>data_path<span class="o">&lt;-</span><span class="s">"/Users/rafael/Dropbox/artigos/Meusartigos/IAA-WGC/GLMs/Simulation/data/"</span>
+
+Biffi_data<span class="o">&lt;-</span>read.table<span class="p">(</span>file<span class="o">=</span><span class="kp">paste</span><span class="p">(</span>data_path<span class="p">,</span><span class="s">"Biffi2014.csv"</span><span class="p">,</span>sep<span class="o">=</span><span class="s">""</span><span class="p">),</span>
+                       header<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+
 </pre></div>
+
+<div class="highlight highlight-r"><pre>Biffi_original<span class="o">&lt;-</span>Biffi_data
+</pre></div>
+
+<p>Problem 1: xmol, Z, SFR. SFR is the response variable</p>
+
+<div class="highlight highlight-r"><pre>Biffi_data<span class="o">&lt;-</span>Biffi_data<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="s">"SFR"</span><span class="p">,</span><span class="s">"Xmol"</span><span class="p">,</span><span class="s">"Z"</span><span class="p">)]</span>
+</pre></div>
+
+<p>Transforming  variable into numeric (required by GLM packages) </p>
+
+<div class="highlight highlight-r"><pre>Biffi_data<span class="o">$</span>SFR<span class="p">[</span><span class="kp">which</span><span class="p">(</span>Biffi_data<span class="o">$</span>SFR<span class="o">==</span><span class="m">0</span><span class="p">)]</span><span class="o">&lt;-</span><span class="m">0</span>
+Biffi_data<span class="o">$</span>SFR<span class="p">[</span><span class="kp">which</span><span class="p">(</span>Biffi_data<span class="o">$</span>SFR<span class="o">&gt;</span><span class="m">0</span><span class="p">)]</span><span class="o">&lt;-</span><span class="m">1</span>
+Biffi_data<span class="o">$</span>SFR<span class="o">&lt;-</span><span class="kp">as.numeric</span><span class="p">(</span>Biffi_data<span class="o">$</span>SFR<span class="p">)</span>
+Biffi_data<span class="o">$</span>Z<span class="o">&lt;-</span><span class="kp">scale</span><span class="p">(</span>Biffi_data<span class="o">$</span>Z<span class="p">)</span><span class="c1">#Scaling and centering</span>
+Biffi_data<span class="o">$</span>Xmol<span class="o">&lt;-</span><span class="kp">scale</span><span class="p">(</span>Biffi_data<span class="o">$</span>Xmol<span class="p">)</span><span class="c1">#Scaling and centering</span>
+</pre></div>
+
+<p>Frequentist</p>
+
+<div class="highlight highlight-r"><pre>Fglm <span class="o">&lt;-</span>glm<span class="p">(</span>SFR<span class="o">~</span>Z<span class="o">+</span>Xmol<span class="p">,</span>family<span class="o">=</span>binomial<span class="p">(</span>link<span class="o">=</span><span class="s">"logit"</span><span class="p">),</span>
+                 data <span class="o">=</span> Biffi_data<span class="p">)</span>
+</pre></div>
+
+<pre lang="r,fig.width=8,"><code>
+plotProb(Fglm)+ylab("Predicted Probabilities for SF")+xlab("")+
+ggtitle("Frequentist Logistic Regression")+coord_cartesian(ylim = c(0,1.05))
+</code></pre>
       </section>
     </div>
 
