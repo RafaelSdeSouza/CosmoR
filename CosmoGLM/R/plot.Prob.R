@@ -1,4 +1,4 @@
-#  R package CosmoGLM file R/plotProb.R
+#  R package CosmoGLM file R/plot.Prob.R
 #  Copyright (C) 2014  Rafael S. de Souza
 #
 #This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@
 #'  
 #' @export 
 #
-plotProb<-function(glm){
+plot.Prob<-function(glm){
   #eta<-exp(coef(glm))[-1]
   d<-data.frame(parameter=names(glm$coef)[-1],
                 y=exp(coef(glm))[-1]/(1+exp(coef(glm))[-1]),
