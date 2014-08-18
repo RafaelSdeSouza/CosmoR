@@ -1,4 +1,4 @@
-#  R package CosmoGLM file R/plot.Prob.R
+#  R package CosmoGLM file R/plot_Prob.R
 #  Copyright (C) 2014  Rafael S. de Souza
 #
 #This program is free software: you can redistribute it and/or modify
@@ -29,11 +29,11 @@
 #' treatment <- gl(3,3)
 #' 
 #' glm.D <- glm(counts ~ outcome + treatment, family=poisson())
-#' plotProb(glm.D) 
+#' plot_Prob(glm.D) 
 #'  
 #' @export 
 #
-plot.Prob<-function(glm){
+plot_Prob<-function(glm){
   #eta<-exp(coef(glm))[-1]
   d<-data.frame(parameter=names(glm$coef)[-1],
                 y=exp(coef(glm))[-1]/(1+exp(coef(glm))[-1]),
