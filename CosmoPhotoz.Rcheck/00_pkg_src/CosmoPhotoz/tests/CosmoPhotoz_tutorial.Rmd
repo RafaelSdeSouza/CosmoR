@@ -1,0 +1,110 @@
+---
+title: "CosmoPhotoz"
+author: "Rafael S. de Souza, ..."
+date: "18 de agosto de 2014"
+output: pdf_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+This is an R Markdown document to explain in simple terms the use of Generalized Linear Models into Astronomy reproducing the main results from Ewan et al (2014).
+
+
+# Required libraries
+```{r,results='hide',message=FALSE, cache=FALSE}
+require(CosmoPhotoz)
+require(quantreg)
+```
+
+Load the data:
+
+```{r}
+data(PHAT0train)
+
+
+data(PHAT0test)
+```
+
+Take a look on the data 
+
+
+
+
+
+```{r}
+PC_comb<-computeCombPCA(subset(PHAT0train,select=c(-redshift)),
+                       subset(PHAT0test,select=c(-redshift)),npcvar=0.995)
+```
+
+Number of PCs to account for 95% of data
+```{r}
+PCvar<-PC_comb$PCvar
+```
+Add the redshift column to the PCA projections of the  Training sample
+
+```{r}
+Trainpc<-cbind(PC_comb$x,redshift=PHAT0train$redshift)
+
+```
+
+
+Store the PCA projections for the testing sample in the vector Testpc
+
+```{r, echo=FALSE}
+Testpc<-PC_comb$y
+```
+
+
+Train  the glm model using gamma family
+
+```{r}
+
+Fit<-glmTrainPhotoZ(Trainpc,formula=redshift~Comp.1*Comp.2*Comp.3*Comp.4*Comp.5*Comp.6,method="Bayesian",family="gamma")
+
+#glmfit<-rq(redshift~Comp.1*Comp.2*Comp.3*Comp.4*Comp.5*Comp.6,data=Trainpc)
+```
+
+
+
+Here you predict your photometric redshift from your photometric data
+ 
+```{r, echo=FALSE}
+#photoz<-glmPredictPhotoZ(data = testpc, train = glmfit$glmfit)$photoz
+photoz<-predict(Fit$glmfit,newdata = Testpc,type="response")
+#photoz<-predict(glmfit,newdata = Testpc,type="response")
+```
+
+Get the redshifts from the testing sample
+
+```{r, echo=FALSE}
+specz<-PHAT0test$redshift
+```
+
+
+Compute basic diagnostic statistics
+
+```{r, echo=FALSE}
+computeDiagPhotoZ(photoz, specz)
+```
+
+
+
+ Create basic comparison plots
+ 
+```{r,fig.width=8, fig.height=9}
+plotDiagPhotoZ(photoz, specz, type = "errordist")
+
+```
+
+```{r,fig.width=8, fig.height=9}
+plotDiagPhotoZ(photoz, specz, type = "predobs")
+```
+
+```{r,fig.width=8, fig.height=9}
+plotDiagPhotoZ(photoz, specz, type = "box")
+```
+

@@ -1,0 +1,18 @@
+* using log directory '/Users/rafael/Dropbox/artigos/Meusartigos/IAA-WGC/Github/CosmoR/CosmoPhotoz.Rcheck'
+* using R version 3.1.1 (2014-07-10)
+* using platform: x86_64-apple-darwin10.8.0 (64-bit)
+* using session charset: ASCII
+* checking for file 'CosmoPhotoz/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'CosmoPhotoz' version '0.1'
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Rafael S. de Souza <rafael.2706@gmail.com>'
+New submission
+* checking package namespace information ... OK
+* checking package dependencies ... ERROR
+  No repository set, so cyclic dependency check skipped
+
+Namespace dependency not required: 'pcaPP'
+
+See the information on DESCRIPTION files in the chapter 'Creating R
+packages' of the 'Writing R Extensions' manual.
